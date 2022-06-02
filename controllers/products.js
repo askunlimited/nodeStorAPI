@@ -13,16 +13,22 @@ const getAllProductsStatic = async (req, res) => {
 const getAllProducts = async (req, res) => {
   const { featured, company, name, sort, fields, numericFilters } = req.query
   const queryObject = {}
-
+  // This is to enable featured product filter
   if (featured) {
     queryObject.featured = featured === 'true' ? true : false
   }
+
+  // This is to filter product by company
   if (company) {
     queryObject.company = company
   }
+
+  // This is to enable name search with case insesitive
   if (name) {
     queryObject.name = { $regex: name, $options: 'i' }
   }
+
+  // Setting up numeric filters for the API to enable users filter using numbers
 
   if (numericFilters) {
     const operatorMap = {
@@ -47,6 +53,8 @@ const getAllProducts = async (req, res) => {
   }
 
   console.log(queryObject)
+
+  // For sorting of products
   let result = Product.find(queryObject)
   // sort
   if (sort) {
